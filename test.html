@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+<div id="testnode"><!-- if: ${age} > 18 --><esuiButton event-click="${onClick(event);event.stopPropagation()}">adult button</esuiButton><!-- else --><esuiButton>default button</esuiButton><!-- /if --></div>
+<script src="./esl.js"></script>
+<script>
+    require.config({
+        "baseUrl": "/",
+        "paths": {},
+        "packages": [
+            {
+                "name": "eicons",
+                "location": "../dep/eicons/1.0.0-beta.1/src",
+                "main": "main.less"
+            },
+            {
+                "name": "eoo",
+                "location": "../dep/eoo/0.1.4/src",
+                "main": "main"
+            },
+            {
+                "name": "esf",
+                "location": "../dep/esf/1.0.0-rc.2/src"
+            },
+            {
+                "name": "est",
+                "location": "../dep/est/1.3.0/src"
+            },
+            {
+                "name": "esui",
+                "location": "../dep/esui/3.2.0-beta.2/src",
+                "main": "main"
+            },
+            {
+                "name": "etpl",
+                "location": "../dep/etpl/3.0.1/src",
+                "main": "main"
+            },
+            {
+                "name": "jquery",
+                "location": "../dep/jquery/1.9.1/src",
+                "main": "jquery.min"
+            },
+            {
+                "name": "moment",
+                "location": "../dep/moment/2.7.0/src",
+                "main": "moment"
+            },
+            {
+                "name": "underscore",
+                "location": "../dep/underscore/1.5.2/src",
+                "main": "underscore"
+            }
+        ]
+    });
+</script>
+<script>
+    require(['/dom-data-bind/dist/main', 'esui', '/EsuiParser', 'esui/Button'], function (main, esui) {
+        var node = document.getElementById('testnode');
+        var tree = new main.Tree({
+            startNode: node,
+            endNode: node,
+            config: new main.Config()
+        });
+
+        console.time('traverse');
+        tree.traverse();
+        console.timeEnd('traverse');
+
+        console.time('setData');
+        tree.setData({age: 20, onClick: function (event) {
+            alert('adult button');
+        }});
+        console.timeEnd('setData');
+    });
+</script>
+</body>
+</html>
