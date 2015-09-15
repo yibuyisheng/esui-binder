@@ -4,6 +4,7 @@ define(function (require, exports, module) {
     var Tree = require('/dom-data-bind/dist/main').Tree;
     var utils = require('/dom-data-bind/dist/main').utils;
     var esui = require('esui');
+    var ViewContext = require('esui/ViewContext');
 
     function EsuiParser(options) {
         EventExprParser.call(this, options);
@@ -11,8 +12,14 @@ define(function (require, exports, module) {
 
     EsuiParser.prototype.collectExprs = function () {
         if (this.node.nodeType === 1 && /^esui/.test(this.node.nodeName.toLowerCase())) {
+            var viewContext = this.tree.getTreeVar('viewContext');
+            if (!viewContext) {
+                viewContext = new ViewContext('EsuiParser-' + new Date().getTime());
+                this.tree.setTreeVar('viewContext', viewContext);
+            }
+
             this.control = esui.create(getControlType(this.node), {
-                viewContext: esui.getViewContext(),
+                viewContext: viewContext,
                 main: this.node
             });
             this.control.render();
